@@ -66,7 +66,7 @@ model Expenses {
 model MonthlySummary {
   id                String    @id @default(uuid())
   user_id           String
-  month             DateTime
+  month             String
   total_spent       Int
   remaining_budget  Int
   created_at        DateTime  @default(now())
