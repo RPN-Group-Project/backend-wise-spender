@@ -7,79 +7,73 @@ const ApiError = require('../utils/ApiError');
  * @param {Object} userBody
  * @returns {Promise<User>}
  */
-const createExpenses = async (expensesBody) => {
+const createExpense = async (expenseBody, user_id) => {
   return prisma.expenses.create({
-    data: expensesBody,
+    data: {...expenseBody, user_id},
   });
 };
 
 const queryExpenses = async (filter, options) => {
-  const { expenses } = filter;
-  const { dataTake, pageNumber } = options;
+  const { expense } = filter;
+  const { take, pageNumber } = options;
 
-  const expensess = await prisma.expenses.findMany({
+  const expenses = await prisma.expenses.findMany({
     where: {
-      name: {
-        contains: expenses,
+      description: {
+        contains: expense,
       },
     },
-    include: {
-      expesnses: true,
-    },
-    skip: (pageNumber - 1) * dataTake,
-    take: dataTake,
+    take: take ? take && parseInt(take) : undefined,
+    skip: pageNumber ? (pageNumber - 1) * take && parseInt(pageNumber) : undefined,
     orderBy: {
       created_at: 'desc',
     },
   });
 
-  return expensess;
+  return expenses;
 };
 
-const getExpensesById = async (id) => {
+const getExpenseById = async (id) => {
   return prisma.expenses.findFirst({
     where: {
       id,
     },
-    include: {
-      expesnses: true,
-    },
   });
 };
 
-const updateExpensesById = async (expensesId, updateBody) => {
-  const expenses = await getExpensesById(expensesId);
+const updateExpenseById = async (expenseId, updateBody) => {
+  const expense = await getExpenseById(expenseId);
 
-  if (!expenses) throw new ApiError(httpStatus.NOT_FOUND, 'Expenses not found');
+  if (!expense) throw new ApiError(httpStatus.NOT_FOUND, 'Expense not found');
 
-  const updateExpenses = await prisma.expenses.update({
+  const updateExpense = await prisma.expenses.update({
     where: {
-      id: expensesId,
+      id: expenseId,
     },
     data: updateBody,
   });
 
-  return updateExpenses;
+  return updateExpense;
 };
 
-const deleteExpensesById = async (expensesId) => {
-  const expenses = await getExpensesById(expensesId);
+const deleteExpenseById = async (expenseId) => {
+  const expense = await getExpenseById(expenseId);
 
-  if (!expenses) throw new ApiError(httpStatus.NOT_FOUND, 'Expenses not Found');
+  if (!expense) throw new ApiError(httpStatus.NOT_FOUND, 'Expense not Found');
 
-  const deleteExpenses = await prisma.expenses.delete({
+  const deleteExpense = await prisma.expenses.delete({
     where: {
-      id: expensesId,
+      id: expenseId,
     },
   });
 
-  return deleteExpenses;
+  return deleteExpense;
 };
 
 module.exports = {
-  createExpenses,
+  createExpense,
   queryExpenses,
-  getExpensesById,
-  updateExpensesById,
-  deleteExpensesById,
+  getExpenseById,
+  updateExpenseById,
+  deleteExpenseById,
 };
