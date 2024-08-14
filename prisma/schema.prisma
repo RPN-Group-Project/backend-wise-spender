@@ -46,7 +46,7 @@ model Category {
   updated_at    DateTime  @updatedAt
 
   User          User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
-  expesnses     Expenses[]
+  expenses     Expenses[]
 }
 
 model Expenses {
