@@ -6,29 +6,70 @@ generator client {
 }
 
 datasource db {
-  provider = "mysql"
+  provider = "postgresql"
   url      = env("DB_URL")
 }
 
 model User {
-  id        String    @id @default(uuid())
-  name      String
-  email     String?    @unique
-  password  String    
-  role      String    @default("user")
-  createdAt DateTime  @default(now())
-  updateAt  DateTime  @default(now())
-  isEmailVerified Boolean @default(false)
-  tokens    Token[]
+  id                  String    @id @default(uuid())
+  name                String
+  email               String?    @unique
+  password            String    
+  createdAt           DateTime  @default(now())
+  updateAt            DateTime  @updatedAt
+  isEmailVerified     Boolean @default(false)
+  expense_limit       BigInt
+
+  tokens              Token[]
+  category            Category[]
+  expenses            Expenses[]
+  monthlySummaries    MonthlySummary[]
 }
 model Token {
   id        String    @id @default(uuid())
   token     String    @db.VarChar(400)
-  userId    String    
-  User      User      @relation(fields: [userId], references: [id], onDelete: Cascade)
+  user_id   String    
+  User      User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
   type      String
   expires   DateTime
   blacklisted Boolean @default(false)
   createdAt DateTime  @default(now())
-  updateAt  DateTime  @default(now())
+  updateAt  DateTime  @updatedAt
+}
+
+model Category {
+  id            String    @id @default(uuid())
+  user_id       String
+  name          String
+  monthly_budget BigInt
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @updatedAt
+
+  User          User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  expesnses     Expenses[]
+}
+
+model Expenses {
+  id            String    @id @default(uuid())
+  user_id       String
+  category_id   String
+  amount        BigInt
+  description   String
+  date          DateTime
+  created_at    DateTime  @default(now())
+  updated_at    DateTime  @updatedAt
+
+  User          User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
+  Category      Category  @relation(fields: [category_id], references: [id], onDelete: Cascade)
+}
+
+model MonthlySummary {
+  id                String    @id @default(uuid())
+  user_id           String
+  month             DateTime
+  total_spent       BigInt
+  remaining_budget  BigInt
+  created_at        DateTime  @default(now())
+  updated_at        DateTime  @updatedAt
+  User              User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
 }
