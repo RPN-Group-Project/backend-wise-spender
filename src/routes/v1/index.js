@@ -4,6 +4,7 @@ const userRoute = require('./user.route');
 const docsRoute = require('./docs.route');
 const categoryRoute = require('./category.route');
 const expenseRoute = require('./expenses.route');
+const monthlySummaryRoute = require('./monthlySummary.route');
 const config = require('../../config/config');
 
 const router = express.Router();
@@ -24,6 +25,10 @@ const defaultRoutes = [
   {
     path: '/expense',
     route: expenseRoute,
+  },
+  {
+    path: '/monthlySummary',
+    route: monthlySummaryRoute
   }
 ];
 
