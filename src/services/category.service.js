@@ -7,15 +7,15 @@ const ApiError = require('../utils/ApiError');
  * @param {Object} userBody
  * @returns {Promise<User>}
  */
-const createCategory = async (categoryBody) => {
+const createCategory = async (categoryBody, user_id) => {
   return prisma.category.create({
-    data: categoryBody,
+    data: {...categoryBody, user_id},
   });
 };
 
-const queryCategory = async (filter, options) => {
+const queryCategorys = async (filter, options) => {
   const { category } = filter;
-  const { dataTake, pageNumber } = options;
+  const { take, pageNumber } = options;
 
   const categorys = await prisma.category.findMany({
     where: {
@@ -24,10 +24,10 @@ const queryCategory = async (filter, options) => {
       },
     },
     include: {
-      expesnses: true,
+      expenses: true,
     },
-    skip: (pageNumber - 1) * dataTake,
-    take: dataTake,
+    take: take ? take && parseInt(take) : undefined,
+    skip: pageNumber ? (pageNumber - 1) * take && parseInt(pageNumber) : undefined,
     orderBy: {
       created_at: 'desc',
     },
@@ -42,7 +42,7 @@ const getCategoryById = async (id) => {
       id,
     },
     include: {
-      expesnses: true,
+      expenses: true,
     },
   });
 };
@@ -78,7 +78,7 @@ const deleteCategoryById = async (categoryId) => {
 
 module.exports = {
   createCategory,
-  queryCategory,
+  queryCategorys,
   getCategoryById,
   updateCategoryById,
   deleteCategoryById,
