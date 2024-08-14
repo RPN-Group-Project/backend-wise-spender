@@ -18,7 +18,7 @@ model User {
   createdAt           DateTime  @default(now())
   updateAt            DateTime  @updatedAt
   isEmailVerified     Boolean @default(false)
-  expense_limit       BigInt
+  expense_limit       Int
 
   tokens              Token[]
   category            Category[]
@@ -41,7 +41,7 @@ model Category {
   id            String    @id @default(uuid())
   user_id       String
   name          String
-  monthly_budget BigInt
+  monthly_budget Int
   created_at    DateTime  @default(now())
   updated_at    DateTime  @updatedAt
 
@@ -53,7 +53,7 @@ model Expenses {
   id            String    @id @default(uuid())
   user_id       String
   category_id   String
-  amount        BigInt
+  amount        Int
   description   String
   date          DateTime
   created_at    DateTime  @default(now())
@@ -67,8 +67,8 @@ model MonthlySummary {
   id                String    @id @default(uuid())
   user_id           String
   month             DateTime
-  total_spent       BigInt
-  remaining_budget  BigInt
+  total_spent       Int
+  remaining_budget  Int
   created_at        DateTime  @default(now())
   updated_at        DateTime  @updatedAt
   User              User      @relation(fields: [user_id], references: [id], onDelete: Cascade)
