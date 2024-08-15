@@ -1,7 +1,6 @@
 const httpStatus = require('http-status');
 const prisma = require('../../prisma/client');
 const ApiError = require('../utils/ApiError');
-const e = require('express');
 
 /**
  * Create a user
@@ -102,6 +101,24 @@ const deleteExpenseById = async (expenseId) => {
   return deleteExpense;
 };
 
+const getExpensesByUser = async (filter, user_id) => {
+  const { startDate, endDate } = filter;
+
+  const expenses = await prisma.expenses.aggregate({
+    where: {
+      user_id,
+      date: {
+        gte: startDate && new Date(startDate),
+        lte: endDate && new Date(endDate),
+      },
+    },
+    _sum: {
+      amount: true,
+    },
+  });
+
+  return expenses;
+};
 module.exports = {
   createExpense,
   queryExpenses,
@@ -109,4 +126,5 @@ module.exports = {
   getExpenseById,
   updateExpenseById,
   deleteExpenseById,
+  getExpensesByUser,
 };

@@ -11,8 +11,8 @@ router
   .post(auth(), validate(expensesValidation.createExpense), expensesController.createExpense)
   .get(auth(), expensesController.getExpenses);
 
-router.route('/user').get(auth(), validate(expensesValidation.getExpensesByUser), expensesController.getExpensesByUser);
-
+router.route('/user').get(auth(), expensesController.getExpensesByUser);
+router.route('/user/sum').get(auth(), expensesController.getUserSumExpense);
 router
   .route('/:expenseId')
   .get(auth(), validate(expensesValidation.getExpense), expensesController.getExpense)

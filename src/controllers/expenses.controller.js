@@ -2,7 +2,6 @@ const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { expensesService } = require('../services');
-const { start } = require('pm2');
 
 const createExpense = catchAsync(async (req, res) => {
   const expense = await expensesService.createExpense(req.body, req.user.id);
@@ -79,6 +78,16 @@ const getExpensesByUser = catchAsync(async (req, res) => {
   });
 });
 
+const getUserSumExpense = catchAsync(async (req, res) => {
+  const { id } = req.user;
+  const result = await expensesService.getExpensesByUser(id);
+  res.status(httpStatus.OK).send({
+    status: httpStatus.OK,
+    message: 'Get Expenses Success',
+    data: result,
+  });
+});
+
 module.exports = {
   createExpense,
   getExpenses,
@@ -86,4 +95,5 @@ module.exports = {
   updateExpense,
   deleteExpense,
   getExpensesByUser,
+  getUserSumExpense,
 };
