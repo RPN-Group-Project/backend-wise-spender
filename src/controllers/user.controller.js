@@ -14,7 +14,12 @@ const createUser = catchAsync(async (req, res) => {
 });
 
 const getUsers = catchAsync(async (req, res) => {
-  const result = await userService.queryUsers();
+  const filter = { user: req.query.user };
+  const options = {
+    take: req.query.take,
+    pageNumber: req.query.skip,
+  };
+  const result = await userService.queryUsers(filter, options);
 
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,

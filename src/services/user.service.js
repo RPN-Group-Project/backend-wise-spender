@@ -21,7 +21,24 @@ const createUser = async (userBody) => {
  * @returns {Promise<QueryResult>}
  */
 const queryUsers = async (filter, options) => {
-  const users = await prisma.user.findMany();
+  const { user } = filter;
+  const { pageNumber, take } = options;
+
+  const users = await prisma.user.findMany({
+    where:{
+      name: user
+    },
+    include:{
+      category:true,
+      expenses: true,
+      monthlySummaries: true,
+    },
+    take: take ? take && parseInt(take) : undefined,
+    skip: pageNumber ? (pageNumber - 1) * take && parseInt(pageNumber) : undefined,
+    orderBy: {
+      createdAt: 'desc',
+    },
+  });
   return users;
 };
 
@@ -34,6 +51,11 @@ const getUserById = async (id) => {
   return prisma.user.findFirst({
     where: {
       id,
+    },
+    include:{
+      category:true,
+      expenses: true,
+      monthlySummaries: true,
     },
   });
 };
