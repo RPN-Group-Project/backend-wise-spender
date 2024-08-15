@@ -43,14 +43,14 @@ const queryExpensesByUser = async (filter, options, user_id) => {
       },
       user_id,
       date: {
-        gte: startDate,
-        lte: endDate,
+        gte: new Date(startDate),
+        lte: new Date(endDate),
       },
     },
     take: take ? take && parseInt(take) : undefined,
     skip: pageNumber ? (pageNumber - 1) * take && parseInt(pageNumber) : undefined,
     orderBy: {
-      date: 'asc',
+      date: 'desc',
     },
     include: {
       Category: {
