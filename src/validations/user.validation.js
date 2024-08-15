@@ -15,8 +15,8 @@ const getUsers = {
     name: Joi.string(),
     role: Joi.string(),
     sortBy: Joi.string(),
-    limit: Joi.number().integer(),
-    page: Joi.number().integer(),
+    take: Joi.number().integer(),
+    skip: Joi.number().integer(),
   }),
 };
 
@@ -35,6 +35,7 @@ const updateUser = {
       email: Joi.string().email(),
       password: Joi.string().custom(password),
       name: Joi.string(),
+      expense_limit : Joi.number()
     })
     .min(1),
 };
