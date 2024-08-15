@@ -48,6 +48,13 @@ const queryExpensesByUser = async (filter, options, user_id) => {
     orderBy: {
       date: 'asc',
     },
+    include: {
+      Category: {
+        select: {
+          name: true,
+        },
+      },
+    },
   });
 
   return expenses;
