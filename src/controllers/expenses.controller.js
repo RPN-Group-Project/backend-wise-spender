@@ -61,7 +61,33 @@ const deleteExpense = catchAsync(async (req, res) => {
     data: null,
   });
 });
+const getExpensesByUser = catchAsync(async (req, res) => {
+  const { id } = req.user;
+  const filter = { expense: req.query.expense, startDate: req.query.startDate, endDate: req.query.endDate };
+  const options = {
+    take: req.query.take,
+    pageNumber: req.query.skip,
+  };
 
+  const result = await expensesService.queryExpensesByUser(filter, options, id);
+
+  res.status(httpStatus.OK).send({
+    status: httpStatus.OK,
+    message: 'Get Expenses Success',
+    data: result,
+  });
+});
+
+const getUserSumExpense = catchAsync(async (req, res) => {
+  const filter = { startDate: req.query.startDate, endDate: req.query.endDate };
+  const { id } = req.user;
+  const result = await expensesService.getExpensesByUser(filter, id);
+  res.status(httpStatus.OK).send({
+    status: httpStatus.OK,
+    message: 'Get Expenses Success',
+    data: result,
+  });
+});
 
 module.exports = {
   createExpense,
@@ -69,4 +95,6 @@ module.exports = {
   getExpense,
   updateExpense,
   deleteExpense,
+  getExpensesByUser,
+  getUserSumExpense,
 };

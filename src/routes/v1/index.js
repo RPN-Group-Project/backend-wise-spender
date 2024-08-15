@@ -28,8 +28,8 @@ const defaultRoutes = [
   },
   {
     path: '/monthlySummary',
-    route: monthlySummaryRoute
-  }
+    route: monthlySummaryRoute,
+  },
 ];
 
 const devRoutes = [

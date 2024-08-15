@@ -9,7 +9,7 @@ const ApiError = require('../utils/ApiError');
  */
 const createExpense = async (expenseBody, user_id) => {
   return prisma.expenses.create({
-    data: {...expenseBody, user_id},
+    data: { ...expenseBody, user_id },
   });
 };
 
@@ -27,6 +27,37 @@ const queryExpenses = async (filter, options) => {
     skip: pageNumber ? (pageNumber - 1) * take && parseInt(pageNumber) : undefined,
     orderBy: {
       created_at: 'desc',
+    },
+  });
+
+  return expenses;
+};
+const queryExpensesByUser = async (filter, options, user_id) => {
+  const { expense, startDate, endDate } = filter;
+  const { take, pageNumber } = options;
+
+  const expenses = await prisma.expenses.findMany({
+    where: {
+      description: {
+        contains: expense,
+      },
+      user_id,
+      date: {
+        gte: startDate && new Date(startDate),
+        lte: endDate && new Date(endDate),
+      },
+    },
+    take: take ? take && parseInt(take) : undefined,
+    skip: pageNumber ? (pageNumber - 1) * take && parseInt(pageNumber) : undefined,
+    orderBy: {
+      date: 'desc',
+    },
+    include: {
+      Category: {
+        select: {
+          name: true,
+        },
+      },
     },
   });
 
@@ -70,10 +101,38 @@ const deleteExpenseById = async (expenseId) => {
   return deleteExpense;
 };
 
+const getExpensesByUser = async (filter, user_id) => {
+  const { startDate, endDate } = filter;
+
+  const expenses = await prisma.expenses.aggregate({
+    where: {
+      user_id,
+      date: {
+        gte: startDate && new Date(startDate),
+        lte: endDate && new Date(endDate),
+      },
+    },
+    _sum: {
+      amount: true,
+    },
+  });
+
+  if (!expenses) throw new ApiError(httpStatus.NOT_FOUND, 'Expenses not found');
+
+  const userExpenseLimit = await prisma.user.findUnique({
+    where: { id: user_id },
+    select: {
+      expense_limit: true,
+    },
+  });
+  return { expenses, userExpenseLimit };
+};
 module.exports = {
   createExpense,
   queryExpenses,
+  queryExpensesByUser,
   getExpenseById,
   updateExpenseById,
   deleteExpenseById,
+  getExpensesByUser,
 };
