@@ -46,7 +46,7 @@ const queryExpensesByUser = async (filter, options, user_id) => {
     take: take ? take && parseInt(take) : undefined,
     skip: pageNumber ? (pageNumber - 1) * take && parseInt(pageNumber) : undefined,
     orderBy: {
-      created_at: 'desc',
+      date: 'asc',
     },
   });
 
