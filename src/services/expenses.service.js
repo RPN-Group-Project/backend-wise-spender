@@ -33,7 +33,7 @@ const queryExpenses = async (filter, options) => {
   return expenses;
 };
 const queryExpensesByUser = async (filter, options, user_id) => {
-  const { expense } = filter;
+  const { expense, startDate, endDate } = filter;
   const { take, pageNumber } = options;
 
   const expenses = await prisma.expenses.findMany({
@@ -42,6 +42,10 @@ const queryExpensesByUser = async (filter, options, user_id) => {
         contains: expense,
       },
       user_id,
+      date: {
+        gte: startDate,
+        lte: endDate,
+      },
     },
     take: take ? take && parseInt(take) : undefined,
     skip: pageNumber ? (pageNumber - 1) * take && parseInt(pageNumber) : undefined,

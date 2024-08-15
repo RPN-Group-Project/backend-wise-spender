@@ -2,6 +2,7 @@ const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { expensesService } = require('../services');
+const { start } = require('pm2');
 
 const createExpense = catchAsync(async (req, res) => {
   const expense = await expensesService.createExpense(req.body, req.user.id);
@@ -63,7 +64,7 @@ const deleteExpense = catchAsync(async (req, res) => {
 });
 const getExpensesByUser = catchAsync(async (req, res) => {
   const { id } = req.user;
-  const filter = { expense: req.query.expense };
+  const filter = { expense: req.query.expense, startDate: req.query.startDate, endDate: req.query.endDate };
   const options = {
     take: req.query.take,
     pageNumber: req.query.skip,
