@@ -1,6 +1,7 @@
 const httpStatus = require('http-status');
 const prisma = require('../../prisma/client');
 const ApiError = require('../utils/ApiError');
+const e = require('express');
 
 /**
  * Create a user
@@ -43,8 +44,8 @@ const queryExpensesByUser = async (filter, options, user_id) => {
       },
       user_id,
       date: {
-        gte: new Date(startDate),
-        lte: new Date(endDate),
+        gte: startDate && new Date(startDate),
+        lte: endDate && new Date(endDate),
       },
     },
     take: take ? take && parseInt(take) : undefined,
