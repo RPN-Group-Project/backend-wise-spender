@@ -19,7 +19,7 @@ const queryMonthlySummarys = async (filter, options) => {
 
   const monthlysummarys = await prisma.monthlySummary.findMany({
     where: {
-      description: {
+      month: {
         contains: monthlysummary,
       },
     },
