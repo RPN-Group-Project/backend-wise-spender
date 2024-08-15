@@ -79,8 +79,9 @@ const getExpensesByUser = catchAsync(async (req, res) => {
 });
 
 const getUserSumExpense = catchAsync(async (req, res) => {
+  const filter = { startDate: req.query.startDate, endDate: req.query.endDate };
   const { id } = req.user;
-  const result = await expensesService.getExpensesByUser(id);
+  const result = await expensesService.getExpensesByUser(filter, id);
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,
     message: 'Get Expenses Success',

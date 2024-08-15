@@ -117,7 +117,15 @@ const getExpensesByUser = async (filter, user_id) => {
     },
   });
 
-  return expenses;
+  if (!expenses) throw new ApiError(httpStatus.NOT_FOUND, 'Expenses not found');
+
+  const userExpenseLimit = await prisma.user.findUnique({
+    where: { id: user_id },
+    select: {
+      expense_limit: true,
+    },
+  });
+  return { expenses, userExpenseLimit };
 };
 module.exports = {
   createExpense,
