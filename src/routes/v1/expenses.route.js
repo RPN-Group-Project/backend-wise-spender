@@ -1,5 +1,5 @@
 const express = require('express');
-const auth  = require('../../middlewares/auth');
+const auth = require('../../middlewares/auth');
 const validate = require('../../middlewares/validate');
 const expensesValidation = require('../../validations/expenses.validation');
 const expensesController = require('../../controllers/expenses.controller');
@@ -10,6 +10,8 @@ router
   .route('/')
   .post(auth(), validate(expensesValidation.createExpense), expensesController.createExpense)
   .get(auth(), expensesController.getExpenses);
+
+router.route('/user').get(auth(), validate(expensesValidation.getExpensesByUser), expensesController.getExpensesByUser);
 
 router
   .route('/:expenseId')

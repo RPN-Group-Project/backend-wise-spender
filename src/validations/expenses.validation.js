@@ -6,7 +6,7 @@ const createExpense = {
     category_id: Joi.string().custom(objectId),
     amount: Joi.number().required(),
     description: Joi.string().required(),
-    date: Joi.date()
+    date: Joi.date(),
   }),
 };
 
@@ -25,7 +25,7 @@ const updateExpense = {
       name: Joi.string(),
       amount: Joi.number().required(),
       description: Joi.string().required(),
-      date: Joi.date()
+      date: Joi.date(),
     })
     .min(1),
 };

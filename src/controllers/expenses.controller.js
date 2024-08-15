@@ -61,7 +61,22 @@ const deleteExpense = catchAsync(async (req, res) => {
     data: null,
   });
 });
+const getExpensesByUser = catchAsync(async (req, res) => {
+  const { id } = req.user;
+  const filter = { expense: req.query.expense };
+  const options = {
+    take: req.query.take,
+    pageNumber: req.query.skip,
+  };
 
+  const result = await expensesService.queryExpensesByUser(filter, options, id);
+
+  res.status(httpStatus.OK).send({
+    status: httpStatus.OK,
+    message: 'Get Expenses Success',
+    data: result,
+  });
+});
 
 module.exports = {
   createExpense,
@@ -69,4 +84,5 @@ module.exports = {
   getExpense,
   updateExpense,
   deleteExpense,
+  getExpensesByUser,
 };
