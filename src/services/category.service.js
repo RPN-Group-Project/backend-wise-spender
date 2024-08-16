@@ -1,13 +1,23 @@
 const httpStatus = require('http-status');
 const prisma = require('../../prisma/client');
 const ApiError = require('../utils/ApiError');
+const { userService } = require('.');
 
 /**
  * Create a user
  * @param {Object} userBody
  * @returns {Promise<User>}
  */
+
 const createCategory = async (categoryBody, user_id) => {
+  const user = await userService.getUserById(user_id)
+
+  const totalMonthlyBudget = user.category.reduce((acc, category) => acc + category.monthly_budget, 0)
+
+  if(totalMonthlyBudget > user.expense_limit){
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Monthly budget category acc exceed user expense limit')
+  }
+
   return prisma.category.create({
     data: { ...categoryBody, user_id },
   });
