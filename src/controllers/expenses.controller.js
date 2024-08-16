@@ -65,16 +65,19 @@ const getExpensesByUser = catchAsync(async (req, res) => {
   const { id } = req.user;
   const filter = { expense: req.query.expense, startDate: req.query.startDate, endDate: req.query.endDate };
   const options = {
-    take: req.query.take,
-    pageNumber: req.query.skip,
+    pageNumber: Number(req.query.page) || 1,
+    take: Number(req.query.take) || 10,
   };
+
+  options.skip = (options.pageNumber - 1) * options.take;
 
   const result = await expensesService.queryExpensesByUser(filter, options, id);
 
   res.status(httpStatus.OK).send({
     status: httpStatus.OK,
     message: 'Get Expenses Success',
-    data: result,
+    data: result.expenses,
+    metadata: result.metadata,
   });
 });
 
