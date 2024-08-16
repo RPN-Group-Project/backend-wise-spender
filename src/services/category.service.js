@@ -9,12 +9,12 @@ const ApiError = require('../utils/ApiError');
  */
 const createCategory = async (categoryBody, user_id) => {
   return prisma.category.create({
-    data: {...categoryBody, user_id},
+    data: { ...categoryBody, user_id },
   });
 };
 
 const queryCategorys = async (filter, options) => {
-  const { category } = filter;
+  const { category, user_id } = filter;
   const { take, pageNumber } = options;
 
   const categorys = await prisma.category.findMany({
@@ -22,6 +22,7 @@ const queryCategorys = async (filter, options) => {
       name: {
         contains: category,
       },
+      user_id,
     },
     include: {
       expenses: true,

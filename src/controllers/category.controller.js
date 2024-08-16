@@ -2,6 +2,7 @@ const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { categoryService } = require('../services');
+const { user } = require('../../prisma/client');
 
 const createCategory = catchAsync(async (req, res) => {
   const category = await categoryService.createCategory(req.body, req.user.id);
@@ -14,7 +15,7 @@ const createCategory = catchAsync(async (req, res) => {
 });
 
 const getCategorys = catchAsync(async (req, res) => {
-  const filter = { category: req.query.category };
+  const filter = { category: req.query.category, user_id: req.user.id };
   const options = {
     take: req.query.take,
     pageNumber: req.query.skip,
@@ -61,7 +62,6 @@ const deleteCategory = catchAsync(async (req, res) => {
     data: null,
   });
 });
-
 
 module.exports = {
   createCategory,
