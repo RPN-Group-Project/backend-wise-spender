@@ -14,6 +14,10 @@ const createCategory = async (categoryBody, user_id) => {
 
   const totalMonthlyBudget = user.category.reduce((acc, category) => acc + category.monthly_budget, 0)
 
+  if(totalMonthlyBudget + categoryBody.monthly_budget > user.expense_limit){
+    throw new ApiError(httpStatus.BAD_REQUEST, 'Monthly budget category acc exceed user expense limit')
+  }
+
   if(totalMonthlyBudget > user.expense_limit){
     throw new ApiError(httpStatus.BAD_REQUEST, 'Monthly budget category acc exceed user expense limit')
   }
