@@ -34,7 +34,7 @@ const queryExpenses = async (filter, options) => {
 };
 const queryExpensesByUser = async (filter, options, user_id) => {
   const { expense, startDate, endDate } = filter;
-  const { take, pageNumber } = options;
+  const { take, pageNumber, skip } = options;
 
   const expenses = await prisma.expenses.findMany({
     where: {
@@ -47,8 +47,8 @@ const queryExpensesByUser = async (filter, options, user_id) => {
         lte: endDate && new Date(endDate),
       },
     },
-    take: take ? take && parseInt(take) : undefined,
-    skip: pageNumber ? (pageNumber - 1) * take && parseInt(pageNumber) : undefined,
+    take: take ? take && Number(take) : undefined,
+    skip,
     orderBy: {
       date: 'desc',
     },
@@ -61,7 +61,33 @@ const queryExpensesByUser = async (filter, options, user_id) => {
     },
   });
 
-  return expenses;
+  if (!expenses) throw new ApiError(httpStatus.NOT_FOUND, 'Expenses not found');
+
+  // prisma count data
+  const count = await prisma.expenses.aggregate({
+    _count: {
+      id: true,
+    },
+    where: {
+      description: {
+        contains: expense,
+      },
+      user_id,
+      date: {
+        gte: startDate && new Date(startDate),
+        lte: endDate && new Date(endDate),
+      },
+    },
+  });
+  const totalPages = Math.ceil(count._count.id / take);
+  return {
+    expenses,
+    metadata: {
+      totalData: count._count.id,
+      totalPages,
+      page: pageNumber,
+    },
+  };
 };
 
 const getExpenseById = async (id) => {
