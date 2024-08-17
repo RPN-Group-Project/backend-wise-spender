@@ -21,7 +21,8 @@
     "test": "jest -i --colors --verbose",
     "test:watch": "jest -i --watchAll",
     "coverage": "jest -i --coverage",
-    "coverage:coveralls": "jest -i --coverage --coverageReporters=text-lcov | coveralls"
+    "coverage:coveralls": "jest -i --coverage --coverageReporters=text-lcov | coveralls",
+     "postinstall": "prisma generate"
   },
   "keywords": [
     "node",
