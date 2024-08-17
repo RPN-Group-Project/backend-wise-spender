@@ -30,7 +30,7 @@ const updateMonthlySummary = {
 
 const deleteMonthlySummary = {
   params: Joi.object().keys({
-    monthlysummaryId: Joi.string().custom(objectId),
+    monthlySummaryId: Joi.string().custom(objectId),
   }),
 };
 

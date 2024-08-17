@@ -1,10 +1,12 @@
-const { v4 } = require('uuid');
 const { faker } = require ('@faker-js/faker')
 const prisma = require('../../prisma')
+const { userOne } = require('./user.fixture')
 
 const categoryOne = {
-    id: v4(),
-    name: faker.commerce.product()
+    id: faker.string.uuid(),
+    user_id: userOne.id,
+    name: faker.commerce.product(),
+    monthly_budget: faker.number.int({min: 200, max: 3000000})
 }
 
 const insertCategory = async(category) => {

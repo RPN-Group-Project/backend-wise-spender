@@ -1,36 +1,26 @@
 const bcrypt = require('bcryptjs');
-const faker = require('faker');
-const { v4 } = require('uuid');
-const prisma = require('../../prisma');
+const { faker } = require('@faker-js/faker');
+const prisma = require('../../prisma')
 
 const password = 'password1';
 const salt = bcrypt.genSaltSync(8);
 const hashedPassword = bcrypt.hashSync(password, salt);
 
 const userOne = {
-  id: v4(),
-  name: faker.name.findName(),
+  id: faker.string.uuid(),
+  name: faker.person.fullName(),
   email: faker.internet.email().toLowerCase(),
   password,
-  role: 'user',
+  expense_limit: faker.number.int({ min: 5000000, max: 10000000 }),
   isEmailVerified: false,
 };
 
 const userTwo = {
-  id: v4(),
-  name: faker.name.findName(),
+  id: faker.string.uuid(),
+  name: faker.person.fullName(),
   email: faker.internet.email().toLowerCase(),
   password,
-  role: 'user',
-  isEmailVerified: false,
-};
-
-const admin = {
-  id: v4(),
-  name: faker.name.findName(),
-  email: faker.internet.email().toLowerCase(),
-  password,
-  role: 'admin',
+  expense_limit: faker.number.int({ min: 100, max: 10000000 }),
   isEmailVerified: false,
 };
 
@@ -45,6 +35,5 @@ const insertUsers = async (users) => {
 module.exports = {
   userOne,
   userTwo,
-  admin,
   insertUsers,
 };

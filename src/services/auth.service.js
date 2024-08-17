@@ -2,7 +2,7 @@ const httpStatus = require('http-status');
 const bcrypt = require('bcryptjs');
 const tokenService = require('./token.service');
 const userService = require('./user.service');
-const prisma = require('../../prisma/client');
+const prisma = require('../../prisma/index');
 const ApiError = require('../utils/ApiError');
 const { tokenTypes } = require('../config/tokens');
 
