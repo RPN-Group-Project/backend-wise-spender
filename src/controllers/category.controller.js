@@ -2,7 +2,6 @@ const httpStatus = require('http-status');
 const ApiError = require('../utils/ApiError');
 const catchAsync = require('../utils/catchAsync');
 const { categoryService } = require('../services');
-const { user } = require('../../prisma/client');
 
 const createCategory = catchAsync(async (req, res) => {
   const category = await categoryService.createCategory(req.body, req.user.id);

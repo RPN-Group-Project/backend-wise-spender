@@ -23,8 +23,8 @@ const updateExpense = {
   body: Joi.object()
     .keys({
       name: Joi.string(),
-      amount: Joi.number().required(),
-      description: Joi.string().required(),
+      amount: Joi.number(),
+      description: Joi.string(),
       date: Joi.date(),
     })
     .min(1),
